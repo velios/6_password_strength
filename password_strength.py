@@ -1,5 +1,4 @@
 import re
-import logging
 from string import (ascii_lowercase,
                     ascii_uppercase,
                     punctuation,
@@ -7,12 +6,9 @@ from string import (ascii_lowercase,
 from getpass import getpass
 from os import path
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger()
-
 
 def check_upper_and_lower_case_in_string(string):
-    return any(char in string for char in ascii_uppercase) and\
+    return any(char in string for char in ascii_uppercase) and \
            any(char in string for char in ascii_lowercase)
 
 
@@ -32,8 +28,8 @@ def check_10k_most_common_passwords_equal_string(string):
         return any(word.rstrip('\n') == string for word in bad_passwords_file)
 
 
-def check_length_more_5_chars(string):
-    return len(string) > 5
+def check_string_length(string, min_length=5):
+    return len(string) > min_length
 
 
 def check_no_regexp_in_string(string):
@@ -49,19 +45,16 @@ def get_password_strength(password):
     checks = [check_upper_and_lower_case_in_string,
               check_digits_in_string,
               check_punctuation_in_string,
-              check_length_more_5_chars,
+              check_string_length,
               check_no_regexp_in_string]
-    check_results_dict = {check.__name__: check(password) for check in checks}
-    check_results_list = list(check_results_dict.values())
-    for key, value in check_results_dict.items():
-        printed_check_result = 'passed' if value is True else 'failed'
-        logger.info('Test {}: {}'.format(key, printed_check_result.upper()))
+    check_results_list = [check_func(password) for check_func in checks]
     positive_check_count = check_results_list.count(True)
     all_check_count = sum([check_results_list.count(True), check_results_list.count(False)])
 
     min_password_strength = 1
-    calculated_password_strength = int(round(positive_check_count / all_check_count * 9, 0)) + 1
-    return min_password_strength if check_10k_most_common_passwords_equal_string(password)\
+    max_password_strength = 9
+    calculated_password_strength = min_password_strength + int(round(positive_check_count / all_check_count * max_password_strength))
+    return min_password_strength if check_10k_most_common_passwords_equal_string(password) \
         else calculated_password_strength
 
 

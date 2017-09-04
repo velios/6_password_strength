@@ -15,11 +15,6 @@ Enter the password and I will analyze its strength:
 ```
 ```bash
 #Output
-INFO:root:Test check_upper_and_lower_case_in_string: PASSED
-INFO:root:Test check_digits_in_string: PASSED
-INFO:root:Test check_punctuation_in_string: PASSED
-INFO:root:Test check_length_more_5_chars: PASSED
-INFO:root:Test check_no_regexp_in_string: PASSED
 Strong of your password 10 of 10
 ```
 
